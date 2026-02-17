@@ -1,0 +1,23 @@
+{
+  "name": "@school-saas/email",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "email dev",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.30",
+    "react": "^19.0.0",
+    "resend": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "react-email": "^3.0.0",
+    "typescript": "^5.7.0"
+  }
+}

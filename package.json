@@ -1,0 +1,37 @@
+{
+  "name": "school-saas",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "db:generate": "pnpm --filter @school-saas/db generate",
+    "db:migrate": "pnpm --filter @school-saas/db migrate",
+    "db:push": "pnpm --filter @school-saas/db push",
+    "db:seed": "pnpm --filter @school-saas/db seed",
+    "db:rls": "pnpm --filter @school-saas/db rls",
+    "db:studio": "pnpm --filter @school-saas/db studio",
+    "test": "turbo test",
+    "test:e2e": "pnpm --filter web test:e2e",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@clerk/shared",
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "msgpackr-extract",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
+  "devDependencies": {
+    "turbo": "^2.8.9"
+  }
+}

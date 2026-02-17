@@ -1,0 +1,21 @@
+{
+  "name": "@school-saas/queue",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/worker.ts",
+    "start": "tsx src/worker.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@school-saas/db": "workspace:*",
+    "@school-saas/email": "workspace:*",
+    "bullmq": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}

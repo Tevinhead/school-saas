@@ -1,0 +1,24 @@
+{
+  "name": "@school-saas/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.12.0",
+    "@school-saas/db": "workspace:*",
+    "@school-saas/validators": "workspace:*",
+    "@trpc/server": "^11.0.0",
+    "drizzle-orm": "^0.38.4",
+    "superjson": "^2.2.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

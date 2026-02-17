@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "School SaaS",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search...",
+    "noResults": "No results found",
+    "actions": "Actions"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "attendance": "Attendance",
+    "gradebook": "Gradebook",
+    "fees": "Fees",
+    "communications": "Communications",
+    "settings": "Settings"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out"
+  }
+}
