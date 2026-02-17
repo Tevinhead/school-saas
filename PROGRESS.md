@@ -1,6 +1,6 @@
 # Progress Tracker
 
-## Current Status: Phase 1 COMPLETE — Phase 2 NOT STARTED
+## Current Status: Phase 1 + Phase 2 COMPLETE — Phase 3 NOT STARTED
 
 ---
 
@@ -70,18 +70,62 @@
 - [x] Reusable DataTable component (@tanstack/react-table + shadcn)
 - [x] Student list page with search, status filter, pagination
 - [x] Student create/edit form (react-hook-form + zod)
-- [x] Student detail page with tabs (Info, Guardians, Enrollment, Attendance stub, Grades stub)
+- [x] Student detail page with tabs (Info, Guardians, Enrollment, Attendance, Grades)
 - [x] Guardian management (add/edit/remove, emergency contact flag)
 - [x] Class enrollment management (enroll/unenroll)
 
 ---
 
-## Phase 2: Core Operations — ⬜ NOT STARTED
+## Phase 2: Core Operations ✅ COMPLETE
 
-### Step 2.1 — Attendance ⬜
-### Step 2.2 — Gradebook ⬜
-### Step 2.3 — Report Cards ⬜
-### Step 2.4 — Fee Management ⬜
+### Step 2.1 — Attendance ✅ COMPLETE
+- [x] Backend: `getStudentsByClassSection` procedure in academic router (join classSections → classes → classEnrollments → students)
+- [x] Backend: `getStudentStats` procedure in attendance router (group by status, calculate presentPercentage)
+- [x] Frontend: Attendance main page with class/section/date selectors
+- [x] Frontend: Batch marking form (useFieldArray, pre-populates from existing records, defaults to "present")
+- [x] Frontend: Daily summary cards (present/absent/late/excused with percentages)
+- [x] Frontend: Student attendance tab (replaces stub — history table + stats summary)
+
+### Step 2.2 — Gradebook ✅ COMPLETE
+- [x] Backend: `updateAssessment`, `deleteAssessment`, `updateGradingScale`, `deleteGradingScale` procedures
+- [x] Backend: `getStudentGradeSummary` — grades grouped by subject with weighted averages
+- [x] Backend: Fixed `submitGrades` to use upsert (`onConflictDoUpdate`) for re-grading
+- [x] Backend: Fixed `getGrades` to join with students table (returns student names)
+- [x] Schema: Added unique constraint `(assessmentId, studentId)` on grades table
+- [x] Frontend: Gradebook page with class/section selector → assessment DataTable
+- [x] Frontend: Assessment create/edit dialog (name, type, scale, max score, weight, due date)
+- [x] Frontend: Spreadsheet-like grade entry grid with memoized rows
+- [x] Frontend: Grading scales admin page with IB/British/American/Percentage presets
+- [x] Frontend: Student grades tab (replaces stub — grouped by subject + weighted averages)
+
+### Step 2.3 — Report Cards ✅ COMPLETE
+- [x] Schema: Added `comments` (JSONB) and `rejectionNote` (text) to reportCards table
+- [x] Backend: New `reportCard` router — list, getById, create, bulkCreate, updateComments, submit, approve, reject, publish
+- [x] Validators: New `report-card.ts` Zod schemas
+- [x] Frontend: Report card list page with term/status filters
+- [x] Frontend: Bulk create page (select term + students → create drafts)
+- [x] Frontend: Detail page with grades by subject, per-subject teacher comments, status workflow buttons
+- [x] Frontend: Draft→submitted→approved→published workflow with rejection notes
+- [x] Frontend: PDF download placeholder (needs @react-pdf/renderer for production)
+
+### Step 2.4 — Fee Management ✅ COMPLETE
+- [x] Backend: Fixed SQL injection bug in `recordPayment` (was using string interpolation for paidAmount)
+- [x] Backend: Auto-status update after payment (paid/partial based on amounts)
+- [x] Backend: `updateFeeStructure`, `deleteFeeStructure`, `bulkCreateInvoices`, `updateInvoice`, `getInvoiceById`, `listPaymentsByInvoice`, `getOverdueInvoices`, `getFeeStats`
+- [x] Backend: Enhanced `listInvoices` with student/fee structure name joins and date filtering
+- [x] Validators: New `fees.ts` Zod schemas
+- [x] Frontend: Fee management page with stats cards + Invoices/Fee Structures tabs
+- [x] Frontend: Fee structure CRUD with dialog
+- [x] Frontend: Invoice DataTable with status filter
+- [x] Frontend: Create individual invoice + bulk create invoices dialogs
+- [x] Frontend: Invoice detail page with payment progress bar + payment history
+- [x] Frontend: Record payment dialog
+
+### Schema Migration (during Phase 2)
+- [x] Changed `tenants.id` from `uuid` to `text` to support Clerk org IDs
+- [x] Changed all `tenant_id` foreign key columns from `uuid` to `text` (20 columns across 8 schema files)
+- [x] Updated `current_tenant_id()` RLS function from `RETURNS uuid` to `RETURNS text`
+- [x] Seed script uses Clerk org ID `org_39n7rluabtOAtn1Hvu8d3HM0ThY` as tenant ID
 
 ---
 
@@ -109,5 +153,6 @@
 ## Known Issues / Notes
 - Clerk dev keys in use (pk_test/sk_test) — switch to production keys before real launch
 - CLERK_WEBHOOK_SECRET is empty — webhooks won't verify signatures until set
-- Attendance and Grades tabs on student detail page are stubs (Phase 2)
-- No git commits yet
+- Report card PDF generation is a placeholder (needs @react-pdf/renderer)
+- Email notifications for absences/overdue fees not yet wired (deferred to Phase 3 polish)
+- Git initialized, initial commit: fcdeb22
