@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
+import { FormSkeleton } from "@/components/skeletons/form-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -57,6 +61,10 @@ export function AttendanceMarkingForm({ classSectionId, date }: AttendanceMarkin
     onSuccess: () => {
       utils.attendance.getByClassAndDate.invalidate({ classSectionId, date });
       utils.attendance.dailySummary.invalidate({ date });
+      toast.success("Attendance saved");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -100,17 +108,11 @@ export function AttendanceMarkingForm({ classSectionId, date }: AttendanceMarkin
   }
 
   if (loadingStudents || loadingRecords) {
-    return <div className="text-muted-foreground">Loading students...</div>;
+    return <FormSkeleton fields={3} />;
   }
 
   if (!students?.length) {
-    return (
-      <Card>
-        <CardContent className="py-8 text-center text-muted-foreground">
-          No students enrolled in this class section.
-        </CardContent>
-      </Card>
-    );
+    return <EmptyState icon={CalendarDays} title="No students enrolled" description="No students are enrolled in this class section." />;
   }
 
   return (
@@ -172,9 +174,6 @@ export function AttendanceMarkingForm({ classSectionId, date }: AttendanceMarkin
               {batchMark.isPending ? "Saving..." : "Save Attendance"}
             </Button>
           </div>
-          {batchMark.isSuccess && (
-            <p className="mt-2 text-sm text-green-600">Attendance saved successfully.</p>
-          )}
         </form>
       </CardContent>
     </Card>

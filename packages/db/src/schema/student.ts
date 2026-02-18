@@ -1,6 +1,7 @@
 import { pgTable, uuid, varchar, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { tenants } from "./tenant";
 import { classes } from "./academic";
+import { userProfiles } from "./user";
 
 export const students = pgTable("students", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -16,6 +17,7 @@ export const students = pgTable("students", {
   enrollmentDate: timestamp("enrollment_date", { mode: "date" }),
   status: varchar("status", { length: 20 }).notNull().default("active"),
   metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+  userProfileId: uuid("user_profile_id").references(() => userProfiles.id),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
@@ -29,6 +31,7 @@ export const guardians = pgTable("guardians", {
   phone: varchar("phone", { length: 50 }),
   email: varchar("email", { length: 255 }),
   isEmergencyContact: boolean("is_emergency_contact").notNull().default(false),
+  userProfileId: uuid("user_profile_id").references(() => userProfiles.id),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

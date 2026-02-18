@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,7 +64,11 @@ export function StudentForm({ mode, defaultValues, studentId }: StudentFormProps
   const createMutation = trpc.student.create.useMutation({
     onSuccess: (student) => {
       utils.student.list.invalidate();
+      toast.success("Student created");
       router.push(`/students/${student.id}`);
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -71,7 +76,11 @@ export function StudentForm({ mode, defaultValues, studentId }: StudentFormProps
     onSuccess: () => {
       utils.student.list.invalidate();
       if (studentId) utils.student.getById.invalidate({ id: studentId });
+      toast.success("Student updated");
       router.push(`/students/${studentId}`);
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 

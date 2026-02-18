@@ -7,6 +7,10 @@ import { gradebookRouter } from "./routers/gradebook";
 import { feesRouter } from "./routers/fees";
 import { communicationRouter } from "./routers/communication";
 import { reportCardRouter } from "./routers/report-card";
+import { portalRouter } from "./routers/portal";
+import { dashboardRouter } from "./routers/dashboard";
+import { onboardingRouter } from "./routers/onboarding";
+import { timetableRouter } from "./routers/timetable";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -17,9 +21,13 @@ export const appRouter = router({
   fees: feesRouter,
   communication: communicationRouter,
   reportCard: reportCardRouter,
+  portal: portalRouter,
+  dashboard: dashboardRouter,
+  onboarding: onboardingRouter,
+  timetable: timetableRouter,
 });
 
 export type AppRouter = typeof appRouter;
 
-export { createTRPCContext, createCallerFactory } from "./trpc";
+export { createTRPCContext, createCallerFactory, authOnlyProcedure } from "./trpc";
 export type { TRPCContext } from "./trpc";

@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/form";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -36,6 +35,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Plus, MoreHorizontal, Pencil, Trash2, Calendar } from "lucide-react";
+import { toast } from "sonner";
+import { CardListSkeleton } from "@/components/skeletons/card-list-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const academicYearSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -52,15 +54,14 @@ export default function AcademicYearsPage() {
 
   const utils = trpc.useUtils();
   const { data: years, isLoading } = trpc.tenant.listAcademicYears.useQuery();
-  const { data: yearTerms } = trpc.tenant.listTerms.useQuery(
-    { academicYearId: editingId ?? "" },
-    { enabled: false }
-  );
-
   const createMutation = trpc.tenant.createAcademicYear.useMutation({
     onSuccess: () => {
       utils.tenant.listAcademicYears.invalidate();
       closeDialog();
+      toast.success("Academic year created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -68,11 +69,21 @@ export default function AcademicYearsPage() {
     onSuccess: () => {
       utils.tenant.listAcademicYears.invalidate();
       closeDialog();
+      toast.success("Academic year updated");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
   const deleteMutation = trpc.tenant.deleteAcademicYear.useMutation({
-    onSuccess: () => utils.tenant.listAcademicYears.invalidate(),
+    onSuccess: () => {
+      utils.tenant.listAcademicYears.invalidate();
+      toast.success("Academic year deleted");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   const form = useForm<AcademicYearValues>({
@@ -127,7 +138,7 @@ export default function AcademicYearsPage() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>;
+    return <CardListSkeleton count={3} />;
   }
 
   return (
@@ -147,14 +158,12 @@ export default function AcademicYearsPage() {
 
       <div className="grid gap-4">
         {years?.length === 0 && (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Calendar className="mb-4 h-12 w-12 text-muted-foreground" />
-              <p className="text-muted-foreground">
-                No academic years yet. Create your first one.
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Calendar}
+            title="No academic years yet"
+            description="Create your first academic year to get started."
+            action={{ label: "Add Academic Year", onClick: openCreate }}
+          />
         )}
         {years?.map((year) => (
           <Card key={year.id}>

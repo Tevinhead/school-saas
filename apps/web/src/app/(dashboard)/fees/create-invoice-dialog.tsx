@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,10 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
       utils.fees.listInvoices.invalidate();
       utils.fees.getFeeStats.invalidate();
       onOpenChange(false);
+      toast.success("Invoice created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 

@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Settings,
   FileText,
+  Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -23,11 +24,12 @@ export interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Students", href: "/students", icon: Users, roles: ["super_admin", "school_admin", "teacher"] },
   { label: "Attendance", href: "/attendance", icon: ClipboardCheck, roles: ["super_admin", "school_admin", "teacher"] },
   { label: "Gradebook", href: "/gradebook", icon: BookOpen, roles: ["super_admin", "school_admin", "teacher"] },
   { label: "Report Cards", href: "/report-cards", icon: FileText, roles: ["super_admin", "school_admin", "teacher"] },
+  { label: "Timetable", href: "/timetable", icon: Calendar, roles: ["super_admin", "school_admin", "teacher"] },
   { label: "Fees", href: "/fees", icon: DollarSign, roles: ["super_admin", "school_admin"] },
   { label: "Communications", href: "/communications", icon: MessageSquare },
   { label: "Settings", href: "/settings", icon: Settings, roles: ["super_admin", "school_admin"] },
@@ -55,8 +57,8 @@ export function Sidebar({ userRole }: SidebarProps) {
         <nav className="flex flex-col gap-1">
           {filteredItems.map((item) => {
             const isActive =
-              item.href === "/"
-                ? pathname === "/"
+              item.href === "/dashboard"
+                ? pathname === "/dashboard"
                 : pathname.startsWith(item.href);
             return (
               <Link

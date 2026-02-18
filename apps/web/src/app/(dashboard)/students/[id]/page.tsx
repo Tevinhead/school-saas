@@ -6,6 +6,7 @@ import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pencil } from "lucide-react";
+import { DetailPageSkeleton } from "@/components/skeletons/detail-page-skeleton";
 import { StudentDetailTabs } from "./student-detail-tabs";
 
 interface Props {
@@ -17,11 +18,7 @@ export default function StudentDetailPage({ params }: Props) {
   const { data: student, isLoading } = trpc.student.getById.useQuery({ id });
 
   if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="text-muted-foreground">Loading student...</div>
-      </div>
-    );
+    return <DetailPageSkeleton />;
   }
 
   if (!student) {

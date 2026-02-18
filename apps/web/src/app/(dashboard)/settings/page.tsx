@@ -2,16 +2,25 @@
 
 import { trpc } from "@/lib/trpc/client";
 import { TenantSettingsForm } from "./tenant-settings-form";
+import { FormSkeleton } from "@/components/skeletons/form-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Building2 } from "lucide-react";
 
 export default function SettingsPage() {
   const { data: tenant, isLoading } = trpc.tenant.getCurrent.useQuery();
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>;
+    return <FormSkeleton />;
   }
 
   if (!tenant) {
-    return <div className="text-muted-foreground">No tenant found. Please select an organization.</div>;
+    return (
+      <EmptyState
+        icon={Building2}
+        title="No organization found"
+        description="Please select an organization to manage settings."
+      />
+    );
   }
 
   return (

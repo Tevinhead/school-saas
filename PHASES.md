@@ -119,3 +119,70 @@
 - Performance audit (Core Web Vitals)
 - Security audit (RLS verification, RBAC edge cases)
 - Documentation for deployment
+
+---
+
+## Phase 4: Scheduling, Admissions, Payments & Localization (Weeks 14–19)
+
+### Step 4.1 — Timetable & Scheduling
+- Period/slot definitions per school (configurable start/end times, break slots)
+- Weekly timetable builder (assign subject + teacher + room to each slot per class)
+- Conflict detection (teacher double-booking, room overlap)
+- Substitution management (mark teacher absent → assign substitute for affected slots)
+- Student personal timetable view (auto-derived from class enrollment)
+- Teacher personal timetable view (all assigned sections)
+- Timetable duplication across terms
+- Print-friendly timetable export
+
+### Step 4.2 — Admissions Pipeline
+- Public-facing application form (per-school branding, no auth required)
+- Application status workflow: inquiry → applied → interviewed → accepted → enrolled → rejected
+- Document upload per application (birth certificate, previous transcripts, passport photo, visa)
+- File storage via MinIO (S3-compatible, already in docker-compose)
+- Interview scheduling with notes
+- Waitlist management per grade level (ranked, auto-offer on vacancy)
+- Auto-create student record on acceptance (pre-fills from application data)
+- Admissions dashboard: pipeline funnel, conversion rates, applications by grade/status
+- Email notifications at each status change (offer letter, rejection, waitlist)
+
+### Step 4.3 — Cambodia Payment Integration
+- ABA Bank KHQR code generation (bakong standard — dominant payment method in Cambodia)
+- QR code display on invoice detail page for scan-to-pay
+- Payment webhook receiver for ABA PayWay API (auto-reconcile invoice on payment confirmation)
+- Wing / TrueMoney mobile wallet integration (deep link generation)
+- USD + KHR dual-currency handling (Cambodia uses both daily — invoices can specify currency)
+- Exchange rate configuration (admin sets current USD↔KHR rate)
+- Bilingual receipt generation (English + Khmer)
+- Payment reminder SMS via queue (integrate with local SMS gateway)
+- Overdue fee escalation workflow (reminder → warning → final notice)
+
+### Step 4.4 — Document Generation & Transcripts
+- Report card PDF generation with @react-pdf/renderer (replace existing placeholder)
+- Customizable PDF templates per school (logo, letterhead, grading legend, signature blocks)
+- Official transcript generation (cumulative grades across academic years)
+- Transfer/leaving certificate generation
+- Enrollment verification letter
+- Bulk PDF generation for end-of-term (all report cards for a class/grade in one batch)
+- PDF storage in MinIO with download links
+- Template editor for admins (pick layout, upload logo, configure fields shown)
+
+### Step 4.5 — Advanced Analytics & Reporting
+- Enrollment trends dashboard (line charts across academic years, by grade level)
+- Attendance analytics (chronic absenteeism flags, trends by class/grade, day-of-week patterns)
+- Grade distribution analysis (by subject, teacher, grade level — histograms + box plots)
+- Fee collection dashboard (collection rate %, outstanding balances, aging report)
+- Teacher workload view (sections assigned, students per section, grading completion)
+- Exportable reports (CSV + Excel via xlsx generation)
+- Scheduled email reports for admins (weekly attendance summary, monthly fee status)
+- MoEYS (Ministry of Education, Youth and Sport) compliance data export format
+- Custom report builder (select dimensions + measures → generate tabular report)
+
+### Step 4.6 — Multi-Language (i18n)
+- Full Khmer (ខ្មែរ) translation of all UI strings (next-intl already configured)
+- English ↔ Khmer language toggle in TopBar
+- Locale-aware date/number formatting (Khmer calendar display)
+- Bilingual report cards (English subject names + Khmer translations)
+- Bilingual invoices and receipts
+- Bilingual announcement publishing (compose in both languages)
+- Translation management workflow (export strings → translate → import)
+- Fallback: show English when Khmer translation is missing

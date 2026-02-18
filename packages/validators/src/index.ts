@@ -4,3 +4,6 @@ export * from "./gradebook";
 export * from "./report-card";
 export * from "./fees";
 export * from "./common";
+export * from "./communication";
+export * from "./onboarding";
+export * from "./timetable";

@@ -103,3 +103,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  aside,
+  nav,
+  header,
+  .print\:hidden {
+    display: none !important;
+  }
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .print\:block {
+    display: block !important;
+  }
+  table {
+    font-size: 10px;
+  }
+}

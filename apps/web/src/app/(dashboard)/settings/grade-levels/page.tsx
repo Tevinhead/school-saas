@@ -22,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -38,6 +37,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Plus, MoreHorizontal, Pencil, Trash2, GraduationCap } from "lucide-react";
+import { toast } from "sonner";
+import { CardListSkeleton } from "@/components/skeletons/card-list-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const gradeLevelSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -58,6 +60,10 @@ export default function GradeLevelsPage() {
     onSuccess: () => {
       utils.academic.listGradeLevels.invalidate();
       closeDialog();
+      toast.success("Grade level created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -65,11 +71,21 @@ export default function GradeLevelsPage() {
     onSuccess: () => {
       utils.academic.listGradeLevels.invalidate();
       closeDialog();
+      toast.success("Grade level updated");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
   const deleteMutation = trpc.academic.deleteGradeLevel.useMutation({
-    onSuccess: () => utils.academic.listGradeLevels.invalidate(),
+    onSuccess: () => {
+      utils.academic.listGradeLevels.invalidate();
+      toast.success("Grade level deleted");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   const form = useForm<GradeLevelValues>({
@@ -125,7 +141,7 @@ export default function GradeLevelsPage() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>;
+    return <CardListSkeleton count={3} />;
   }
 
   return (
@@ -144,14 +160,12 @@ export default function GradeLevelsPage() {
       </div>
 
       {levels?.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <GraduationCap className="mb-4 h-12 w-12 text-muted-foreground" />
-            <p className="text-muted-foreground">
-              No grade levels yet. Create your first one.
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={GraduationCap}
+          title="No grade levels yet"
+          description="Create your first grade level to get started."
+          action={{ label: "Add Grade Level", onClick: openCreate }}
+        />
       ) : (
         <div className="rounded-md border">
           <Table>

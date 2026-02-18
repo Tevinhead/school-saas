@@ -86,6 +86,7 @@ function enforceRole(...roles: UserRole[]) {
 }
 
 export const createCallerFactory = t.createCallerFactory;
+export const authOnlyProcedure = t.procedure.use(enforceAuth);
 export const protectedProcedure = t.procedure.use(enforceAuth).use(enforceTenant);
 export const adminProcedure = protectedProcedure.use(enforceRole("super_admin", "school_admin"));
 export const teacherProcedure = protectedProcedure.use(enforceRole("super_admin", "school_admin", "teacher"));

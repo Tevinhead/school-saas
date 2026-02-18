@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,8 +36,13 @@ export default function GradebookPage() {
   );
 
   const deleteMutation = trpc.gradebook.deleteAssessment.useMutation({
-    onSuccess: () =>
-      utils.gradebook.listAssessments.invalidate({ classSectionId: selectedSectionId }),
+    onSuccess: () => {
+      utils.gradebook.listAssessments.invalidate({ classSectionId: selectedSectionId });
+      toast.success("Assessment deleted");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   const columns = useMemo(

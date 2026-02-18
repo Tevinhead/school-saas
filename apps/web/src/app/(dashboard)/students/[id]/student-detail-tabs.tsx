@@ -6,6 +6,7 @@ import { GuardiansTab } from "./tabs/guardians-tab";
 import { EnrollmentTab } from "./tabs/enrollment-tab";
 import { AttendanceTab } from "./tabs/attendance-tab";
 import { GradesTab } from "./tabs/grades-tab";
+import { TimetableTab } from "./tabs/timetable-tab";
 
 interface Student {
   id: string;
@@ -34,6 +35,7 @@ export function StudentDetailTabs({ student }: StudentDetailTabsProps) {
         <TabsTrigger value="enrollment">Enrollment</TabsTrigger>
         <TabsTrigger value="attendance">Attendance</TabsTrigger>
         <TabsTrigger value="grades">Grades</TabsTrigger>
+        <TabsTrigger value="timetable">Timetable</TabsTrigger>
       </TabsList>
       <TabsContent value="info" className="mt-4">
         <StudentInfoTab student={student} />
@@ -49,6 +51,9 @@ export function StudentDetailTabs({ student }: StudentDetailTabsProps) {
       </TabsContent>
       <TabsContent value="grades" className="mt-4">
         <GradesTab studentId={student.id} />
+      </TabsContent>
+      <TabsContent value="timetable" className="mt-4">
+        <TimetableTab studentId={student.id} />
       </TabsContent>
     </Tabs>
   );

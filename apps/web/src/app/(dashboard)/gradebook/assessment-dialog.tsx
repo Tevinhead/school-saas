@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,6 +70,10 @@ export function AssessmentDialog({
     onSuccess: () => {
       utils.gradebook.listAssessments.invalidate({ classSectionId });
       onOpenChange(false);
+      toast.success("Assessment created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -76,6 +81,10 @@ export function AssessmentDialog({
     onSuccess: () => {
       utils.gradebook.listAssessments.invalidate({ classSectionId });
       onOpenChange(false);
+      toast.success("Assessment updated");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 

@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +64,10 @@ export function TenantSettingsForm({ initialData }: TenantSettingsFormProps) {
   const updateMutation = trpc.tenant.update.useMutation({
     onSuccess: () => {
       utils.tenant.getCurrent.invalidate();
+      toast.success("Settings saved");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 

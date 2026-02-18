@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,6 +52,10 @@ export function BulkInvoiceDialog({ open, onOpenChange }: BulkInvoiceDialogProps
       setFeeStructureId("");
       setDueDate("");
       setSelectedStudents(new Set());
+      toast.success("Invoices created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 

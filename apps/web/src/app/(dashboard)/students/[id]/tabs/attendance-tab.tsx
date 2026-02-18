@@ -1,6 +1,9 @@
 "use client";
 
 import { trpc } from "@/lib/trpc/client";
+import { StatCardsSkeleton } from "@/components/skeletons/stat-cards-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { CalendarDays } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -26,7 +29,7 @@ export function AttendanceTab({ studentId }: { studentId: string }) {
     trpc.attendance.getStudentStats.useQuery({ studentId });
 
   if (loadingRecords || loadingStats) {
-    return <div className="text-muted-foreground">Loading attendance...</div>;
+    return <StatCardsSkeleton />;
   }
 
   const summaryCards = [
@@ -75,11 +78,7 @@ export function AttendanceTab({ studentId }: { studentId: string }) {
       )}
 
       {records?.length === 0 ? (
-        <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">
-            No attendance records found.
-          </CardContent>
-        </Card>
+        <EmptyState icon={CalendarDays} title="No attendance records" description="No attendance records have been recorded yet." />
       ) : (
         <div className="rounded-md border">
           <Table>

@@ -6,3 +6,4 @@ export * from "./attendance";
 export * from "./gradebook";
 export * from "./fees";
 export * from "./communication";
+export * from "./timetable";

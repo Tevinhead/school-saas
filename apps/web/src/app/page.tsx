@@ -3,10 +3,23 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function HomePage() {
-  const { userId } = await auth();
+  const session = await auth();
 
-  if (userId) {
-    redirect("/students");
+  if (session.userId) {
+    const userRole = session.orgRole
+      ? ({
+          "org:admin": "school_admin",
+          "org:teacher": "teacher",
+          "org:student": "student",
+          "org:parent": "parent",
+        }[session.orgRole] ?? null)
+      : null;
+
+    if (userRole === "student" || userRole === "parent") {
+      redirect("/portal");
+    }
+
+    redirect("/dashboard");
   }
 
   return (

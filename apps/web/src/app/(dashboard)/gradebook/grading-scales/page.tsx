@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
+import { CardListSkeleton } from "@/components/skeletons/card-list-skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -87,11 +89,23 @@ export default function GradingScalesPage() {
   const { data: scales, isLoading } = trpc.gradebook.listGradingScales.useQuery();
 
   const createMutation = trpc.gradebook.createGradingScale.useMutation({
-    onSuccess: () => utils.gradebook.listGradingScales.invalidate(),
+    onSuccess: () => {
+      utils.gradebook.listGradingScales.invalidate();
+      toast.success("Grading scale created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   const deleteMutation = trpc.gradebook.deleteGradingScale.useMutation({
-    onSuccess: () => utils.gradebook.listGradingScales.invalidate(),
+    onSuccess: () => {
+      utils.gradebook.listGradingScales.invalidate();
+      toast.success("Grading scale deleted");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   function seedPreset(preset: (typeof presets)[number]) {
@@ -104,7 +118,7 @@ export default function GradingScalesPage() {
   }
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>;
+    return <CardListSkeleton count={3} />;
   }
 
   return (

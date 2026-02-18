@@ -22,6 +22,9 @@ const TENANT_SCOPED_TABLES = [
   "announcements",
   "message_threads",
   "messages",
+  "periods",
+  "timetable_entries",
+  "substitutions",
 ] as const;
 
 async function applyRLS() {

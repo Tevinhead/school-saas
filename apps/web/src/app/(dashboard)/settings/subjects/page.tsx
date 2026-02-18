@@ -22,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -38,6 +37,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Plus, MoreHorizontal, Pencil, Trash2, BookOpen } from "lucide-react";
+import { toast } from "sonner";
+import { CardListSkeleton } from "@/components/skeletons/card-list-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const subjectSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -60,6 +62,10 @@ export default function SubjectsPage() {
     onSuccess: () => {
       utils.academic.listSubjects.invalidate();
       closeDialog();
+      toast.success("Subject created");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -67,11 +73,21 @@ export default function SubjectsPage() {
     onSuccess: () => {
       utils.academic.listSubjects.invalidate();
       closeDialog();
+      toast.success("Subject updated");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
   const deleteMutation = trpc.academic.deleteSubject.useMutation({
-    onSuccess: () => utils.academic.listSubjects.invalidate(),
+    onSuccess: () => {
+      utils.academic.listSubjects.invalidate();
+      toast.success("Subject deleted");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   const form = useForm<SubjectValues>({
@@ -126,7 +142,7 @@ export default function SubjectsPage() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>;
+    return <CardListSkeleton count={3} />;
   }
 
   return (
@@ -145,14 +161,12 @@ export default function SubjectsPage() {
       </div>
 
       {subjectsList?.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <BookOpen className="mb-4 h-12 w-12 text-muted-foreground" />
-            <p className="text-muted-foreground">
-              No subjects yet. Create your first one.
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={BookOpen}
+          title="No subjects yet"
+          description="Create your first subject to get started."
+          action={{ label: "Add Subject", onClick: openCreate }}
+        />
       ) : (
         <div className="rounded-md border">
           <Table>

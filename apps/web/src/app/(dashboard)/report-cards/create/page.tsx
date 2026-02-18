@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,7 +40,13 @@ export default function CreateReportCardsPage() {
   });
 
   const bulkCreate = trpc.reportCard.bulkCreate.useMutation({
-    onSuccess: () => router.push("/report-cards"),
+    onSuccess: () => {
+      toast.success("Report cards created");
+      router.push("/report-cards");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   function toggleStudent(id: string) {

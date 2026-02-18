@@ -41,3 +41,10 @@ export const messageRecipients = pgTable("message_recipients", {
   isRead: boolean("is_read").notNull().default(false),
   readAt: timestamp("read_at", { withTimezone: true }),
 });
+
+export const threadParticipants = pgTable("thread_participants", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  threadId: uuid("thread_id").notNull().references(() => messageThreads.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").notNull().references(() => userProfiles.id, { onDelete: "cascade" }),
+  joinedAt: timestamp("joined_at", { withTimezone: true }).notNull().defaultNow(),
+});

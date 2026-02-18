@@ -14,6 +14,7 @@
     "studio": "drizzle-kit studio",
     "seed": "tsx src/seed.ts",
     "rls": "tsx src/rls.ts",
+    "rls-audit": "tsx src/rls-audit.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

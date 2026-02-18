@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,6 +46,10 @@ export function GradeEntry({ assessmentId, classSectionId, onClose }: GradeEntry
     onSuccess: () => {
       utils.gradebook.getGrades.invalidate({ assessmentId });
       onClose();
+      toast.success("Grades saved");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
 
@@ -155,9 +160,6 @@ export function GradeEntry({ assessmentId, classSectionId, onClose }: GradeEntry
               {submitMutation.isPending ? "Saving..." : "Save Grades"}
             </Button>
           </div>
-          {submitMutation.isSuccess && (
-            <p className="mt-2 text-sm text-green-600">Grades saved successfully.</p>
-          )}
         </form>
       </CardContent>
     </Card>

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
+import { DetailPageSkeleton } from "@/components/skeletons/detail-page-skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,27 +35,55 @@ export function ReportCardDetail({ reportCardId }: ReportCardDetailProps) {
   const { data: card, isLoading } = trpc.reportCard.getById.useQuery({ id: reportCardId });
 
   const submitMutation = trpc.reportCard.submit.useMutation({
-    onSuccess: () => utils.reportCard.getById.invalidate({ id: reportCardId }),
+    onSuccess: () => {
+      utils.reportCard.getById.invalidate({ id: reportCardId });
+      toast.success("Submitted for review");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
   const approveMutation = trpc.reportCard.approve.useMutation({
-    onSuccess: () => utils.reportCard.getById.invalidate({ id: reportCardId }),
+    onSuccess: () => {
+      utils.reportCard.getById.invalidate({ id: reportCardId });
+      toast.success("Report card approved");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
   const rejectMutation = trpc.reportCard.reject.useMutation({
     onSuccess: () => {
       utils.reportCard.getById.invalidate({ id: reportCardId });
       setRejectDialogOpen(false);
       setRejectionNote("");
+      toast.success("Report card rejected");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
     },
   });
   const publishMutation = trpc.reportCard.publish.useMutation({
-    onSuccess: () => utils.reportCard.getById.invalidate({ id: reportCardId }),
+    onSuccess: () => {
+      utils.reportCard.getById.invalidate({ id: reportCardId });
+      toast.success("Report card published");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
   const commentsMutation = trpc.reportCard.updateComments.useMutation({
-    onSuccess: () => utils.reportCard.getById.invalidate({ id: reportCardId }),
+    onSuccess: () => {
+      utils.reportCard.getById.invalidate({ id: reportCardId });
+      toast.success("Comments saved");
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Something went wrong");
+    },
   });
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>;
+    return <DetailPageSkeleton />;
   }
 
   if (!card) {

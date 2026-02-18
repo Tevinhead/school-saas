@@ -14,7 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Users } from "lucide-react";
+import { PageHeaderSkeleton } from "@/components/skeletons/page-header-skeleton";
+import { DataTableSkeleton } from "@/components/skeletons/data-table-skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function StudentsPage() {
   const [page, setPage] = useState(0);
@@ -78,11 +81,25 @@ export default function StudentsPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
+        <PageHeaderSkeleton />
+        <DataTableSkeleton />
+      </div>
+    );
+  }
+
+  if (data?.items.length === 0 && !search && status === "all") {
+    return (
+      <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold">Students</h1>
           <p className="text-muted-foreground">Manage student records</p>
         </div>
-        <div className="text-muted-foreground">Loading...</div>
+        <EmptyState
+          icon={Users}
+          title="No students yet"
+          description="Get started by adding your first student."
+          action={{ label: "Add Student", href: "/students/new" }}
+        />
       </div>
     );
   }
