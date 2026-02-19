@@ -17,7 +17,7 @@ module.exports = {
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_demo_not_used",
         CLERK_SECRET_KEY: "sk_test_demo_not_used",
         CLERK_WEBHOOK_SECRET: "demo_webhook_secret_not_used",
-        NEXT_PUBLIC_APP_URL: "https://demo.school.paigu.org",
+        NEXT_PUBLIC_APP_URL: "https://school-demo.paigu.org",
         SKIP_ENV_VALIDATION: "true",
       },
     },
