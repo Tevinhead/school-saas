@@ -1,0 +1,94 @@
+{
+  "common": {
+    "appName": "School SaaS",
+    "loading": "កំពុងផ្ទុក...",
+    "save": "រក្សាទុក",
+    "cancel": "បោះបង់",
+    "delete": "លុប",
+    "edit": "កែប្រែ",
+    "create": "បង្កើត",
+    "search": "ស្វែងរក...",
+    "noResults": "រកមិនឃើញលទ្ធផល",
+    "actions": "សកម្មភាព"
+  },
+  "nav": {
+    "dashboard": "ផ្ទាំងគ្រប់គ្រង",
+    "students": "សិស្ស",
+    "attendance": "វត្តមាន",
+    "gradebook": "សៀវភៅពិន្ទុ",
+    "reportCards": "កាតរបាយការណ៍",
+    "timetable": "កាលវិភាគ",
+    "fees": "ថ្លៃសិក្សា",
+    "communications": "ទំនាក់ទំនង",
+    "settings": "ការកំណត់",
+    "admissions": "ការចូលរៀន",
+    "analytics": "ស្ថិតិ"
+  },
+  "auth": {
+    "signIn": "ចូលប្រើ",
+    "signUp": "ចុះឈ្មោះ",
+    "signOut": "ចេញ"
+  },
+  "students": {
+    "title": "សិស្ស",
+    "addStudent": "បន្ថែមសិស្ស",
+    "firstName": "នាមខ្លួន",
+    "lastName": "នាមត្រកូល",
+    "dateOfBirth": "ថ្ងៃខែឆ្នាំកំណើត",
+    "gradeLevel": "ថ្នាក់",
+    "status": "ស្ថានភាព"
+  },
+  "attendance": {
+    "title": "វត្តមាន",
+    "present": "មានវត្តមាន",
+    "absent": "អវត្តមាន",
+    "late": "យឺត",
+    "excused": "មានច្បាប់"
+  },
+  "fees": {
+    "title": "ថ្លៃសិក្សា",
+    "invoice": "វិក្កយបត្រ",
+    "amount": "ចំនួនទឹកប្រាក់",
+    "dueDate": "ថ្ងៃផុតកំណត់",
+    "status": {
+      "pending": "រង់ចាំ",
+      "paid": "បានបង់",
+      "overdue": "ហួសពេល",
+      "partial": "បង់មួយផ្នែក",
+      "cancelled": "បានបោះបង់"
+    },
+    "paymentMethod": {
+      "cash": "សាច់ប្រាក់",
+      "bank_transfer": "ផ្ទេរប្រាក់ធនាគារ",
+      "card": "កាតឥណទាន",
+      "khqr": "KHQR"
+    }
+  },
+  "admissions": {
+    "title": "ការចូលរៀន",
+    "newApplication": "ពាក្យស្នើសុំថ្មី",
+    "status": {
+      "inquiry": "សាកសួរ",
+      "applied": "បានដាក់ពាក្យ",
+      "interviewed": "បានសំភាសន៍",
+      "accepted": "ទទួលយក",
+      "enrolled": "ចុះឈ្មោះ",
+      "rejected": "បដិសេធ",
+      "waitlisted": "ក្នុងបញ្ជីរង់ចាំ"
+    }
+  },
+  "analytics": {
+    "title": "ស្ថិតិ",
+    "enrollment": "ការចុះឈ្មោះ",
+    "attendance": "វត្តមាន",
+    "grades": "ពិន្ទុ",
+    "fees": "ថ្លៃសិក្សា",
+    "exportCsv": "នាំចេញ CSV"
+  },
+  "pdf": {
+    "reportCard": "កាតរបាយការណ៍",
+    "transcript": "វិញ្ញាបនបត្រ",
+    "receipt": "បង្កាន់ដៃ",
+    "download": "ទាញយក"
+  }
+}

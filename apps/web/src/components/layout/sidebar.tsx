@@ -12,6 +12,8 @@ import {
   Settings,
   FileText,
   Calendar,
+  UserPlus,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,6 +33,8 @@ const navItems: NavItem[] = [
   { label: "Report Cards", href: "/report-cards", icon: FileText, roles: ["super_admin", "school_admin", "teacher"] },
   { label: "Timetable", href: "/timetable", icon: Calendar, roles: ["super_admin", "school_admin", "teacher"] },
   { label: "Fees", href: "/fees", icon: DollarSign, roles: ["super_admin", "school_admin"] },
+  { label: "Admissions", href: "/admissions", icon: UserPlus, roles: ["super_admin", "school_admin"] },
+  { label: "Analytics", href: "/analytics", icon: BarChart3, roles: ["super_admin", "school_admin"] },
   { label: "Communications", href: "/communications", icon: MessageSquare },
   { label: "Settings", href: "/settings", icon: Settings, roles: ["super_admin", "school_admin"] },
 ];

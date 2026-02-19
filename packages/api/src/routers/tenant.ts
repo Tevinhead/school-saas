@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
 import { router, protectedProcedure, adminProcedure } from "../trpc";
-import { tenants, academicYears, terms } from "@school-saas/db/schema";
+import { tenants, academicYears, terms, exchangeRateSettings } from "@school-saas/db/schema";
 
 export const tenantRouter = router({
   getCurrent: protectedProcedure.query(async ({ ctx }) => {
@@ -137,5 +137,33 @@ export const tenantRouter = router({
         .delete(terms)
         .where(and(eq(terms.id, input.id), eq(terms.tenantId, ctx.auth.orgId)));
       return { success: true };
+    }),
+
+  getExchangeRate: protectedProcedure.query(async ({ ctx }) => {
+    const setting = await ctx.db.query.exchangeRateSettings.findFirst({
+      where: eq(exchangeRateSettings.tenantId, ctx.auth.orgId),
+    });
+    return setting ?? { usdToKhr: "4100" };
+  }),
+
+  setExchangeRate: adminProcedure
+    .input(z.object({ usdToKhr: z.string().regex(/^\d+(\.\d{1,2})?$/) }))
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db.query.exchangeRateSettings.findFirst({
+        where: eq(exchangeRateSettings.tenantId, ctx.auth.orgId),
+      });
+      if (existing) {
+        const [updated] = await ctx.db
+          .update(exchangeRateSettings)
+          .set({ usdToKhr: input.usdToKhr, updatedAt: new Date(), updatedBy: ctx.auth.userId })
+          .where(eq(exchangeRateSettings.tenantId, ctx.auth.orgId))
+          .returning();
+        return updated;
+      }
+      const [created] = await ctx.db
+        .insert(exchangeRateSettings)
+        .values({ tenantId: ctx.auth.orgId, usdToKhr: input.usdToKhr, updatedBy: ctx.auth.userId })
+        .returning();
+      return created;
     }),
 });

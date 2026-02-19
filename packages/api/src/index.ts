@@ -11,6 +11,8 @@ import { portalRouter } from "./routers/portal";
 import { dashboardRouter } from "./routers/dashboard";
 import { onboardingRouter } from "./routers/onboarding";
 import { timetableRouter } from "./routers/timetable";
+import { admissionsRouter } from "./routers/admissions";
+import { analyticsRouter } from "./routers/analytics";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -25,6 +27,8 @@ export const appRouter = router({
   dashboard: dashboardRouter,
   onboarding: onboardingRouter,
   timetable: timetableRouter,
+  admissions: admissionsRouter,
+  analytics: analyticsRouter,
 });
 
 export type AppRouter = typeof appRouter;

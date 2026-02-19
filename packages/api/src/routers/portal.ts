@@ -76,6 +76,9 @@ async function resolveStudentAccess(
     if (!link) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Access denied to this student" });
     }
+  } else if (userProfile.role === "school_admin" || userProfile.role === "super_admin" || userProfile.role === "teacher") {
+    // Admins and teachers can access any student for portal preview
+    return;
   } else {
     throw new TRPCError({ code: "FORBIDDEN", message: "Portal access is for students and parents only" });
   }
@@ -128,6 +131,15 @@ export const portalRouter = router({
         role: profile.role as string,
         students: linkedStudents.filter(Boolean),
       };
+    }
+
+    // Admins and teachers can preview the portal — return first 5 students
+    if (profile.role === "school_admin" || profile.role === "super_admin" || profile.role === "teacher") {
+      const allStudents = await ctx.db.query.students.findMany({
+        where: eq(students.tenantId, ctx.auth.orgId),
+        limit: 5,
+      });
+      return { role: profile.role as string, students: allStudents };
     }
 
     return { role: profile.role as string, students: [] };

@@ -14,15 +14,23 @@ export interface TRPCContext {
   };
 }
 
+const CLERK_ROLE_MAP: Record<string, string> = {
+  "org:admin": "school_admin",
+  "org:teacher": "teacher",
+  "org:student": "student",
+  "org:parent": "parent",
+};
+
 export async function createTRPCContext(opts: { req: Request }): Promise<TRPCContext> {
   const session = await auth();
+  const rawRole = session.orgRole ?? null;
 
   return {
     db,
     auth: {
       userId: session.userId,
       orgId: session.orgId ?? null,
-      orgRole: session.orgRole ?? null,
+      orgRole: rawRole ? (CLERK_ROLE_MAP[rawRole] ?? rawRole) : null,
     },
   };
 }
@@ -59,7 +67,7 @@ const enforceTenant = t.middleware(async ({ ctx, next }) => {
   // Set the tenant ID in the PostgreSQL session for RLS
   // This will be used by RLS policies to filter data
   await ctx.db.execute(
-    sql`SELECT set_config('app.current_tenant_id', ${ctx.auth.orgId}, true)`
+    sql`SELECT set_config('app.current_tenant_id', ${ctx.auth.orgId}, false)`
   );
 
   return next({

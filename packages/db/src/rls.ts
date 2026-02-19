@@ -25,6 +25,11 @@ const TENANT_SCOPED_TABLES = [
   "periods",
   "timetable_entries",
   "substitutions",
+  "applications",
+  "application_documents",
+  "application_interviews",
+  "waitlist_entries",
+  "exchange_rate_settings",
 ] as const;
 
 async function applyRLS() {

@@ -26,8 +26,18 @@ export const invoices = pgTable("invoices", {
   dueDate: timestamp("due_date", { mode: "date" }).notNull(),
   status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, partial, paid, overdue, cancelled
   paidAmount: numeric("paid_amount", { precision: 12, scale: 2 }).notNull().default("0"),
+  khqrCode: text("khqr_code"),
+  khqrGeneratedAt: timestamp("khqr_generated_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const exchangeRateSettings = pgTable("exchange_rate_settings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  tenantId: text("tenant_id").notNull().references(() => tenants.id, { onDelete: "cascade" }),
+  usdToKhr: numeric("usd_to_khr", { precision: 12, scale: 2 }).notNull().default("4100"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedBy: text("updated_by"), // userId
 });
 
 export const payments = pgTable("payments", {

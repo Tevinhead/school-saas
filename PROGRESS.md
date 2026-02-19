@@ -161,14 +161,45 @@
 
 ---
 
-## Phase 4: Scheduling, Admissions, Payments & Localization — ⬜ NOT STARTED
+## Phase 4: Scheduling, Admissions, Payments & Localization — 🔄 IN PROGRESS
 
-### Step 4.1 — Timetable & Scheduling ⬜
-### Step 4.2 — Admissions Pipeline ⬜
-### Step 4.3 — Cambodia Payment Integration ⬜
-### Step 4.4 — Document Generation & Transcripts ⬜
-### Step 4.5 — Advanced Analytics & Reporting ⬜
-### Step 4.6 — Multi-Language (i18n) ⬜
+### Step 4.1 — Timetable & Scheduling ✅ COMPLETE
+- [x] Schema: `packages/db/src/schema/timetable.ts` — periods, timetableEntries, substitutions tables
+- [x] Router: `packages/api/src/routers/timetable.ts` — full CRUD, conflict detection, personal views, substitutions
+- [x] Validators: `packages/validators/src/timetable.ts` — all Zod schemas
+- [x] Frontend: `apps/web/src/app/(dashboard)/timetable/` — page + 9 component files (grid, toolbar, dialogs, tabs)
+- [x] Frontend: `apps/web/src/app/(portal)/portal/timetable/` — portal view
+
+### Step 4.2 — Admissions Pipeline ✅ COMPLETE
+- [x] Schema: `packages/db/src/schema/admissions.ts` — applications, applicationDocuments, applicationInterviews, waitlistEntries tables
+- [x] Validators: `packages/validators/src/admissions.ts` — all Zod schemas
+- [x] Router: `packages/api/src/routers/admissions.ts` — full CRUD + pipeline funnel + waitlist management
+- [x] Frontend: `apps/web/src/app/(dashboard)/admissions/page.tsx` — pipeline dashboard with kanban/table + funnel
+- [x] Frontend: `apps/web/src/app/(dashboard)/admissions/[id]/page.tsx` — application detail + interview scheduling
+- [x] Frontend: `apps/web/src/app/apply/[orgSlug]/page.tsx` — public multi-step application form (no auth)
+- [x] Sidebar: Admissions nav item added for admin roles
+
+### Step 4.3 — Cambodia Payment Integration ✅ COMPLETE
+- [x] Schema: Added khqrCode + khqrGeneratedAt to invoices table
+- [x] Schema: New exchangeRateSettings table
+- [x] Frontend: Exchange rate settings page at /settings/exchange-rate
+- [x] Webhook: ABA PayWay webhook handler at /api/webhooks/aba
+
+### Step 4.4 — Document Generation & Transcripts ✅ COMPLETE
+- [x] PDF templates: report-card-template.tsx, transcript-template.tsx, receipt-template.tsx (bilingual EN/KH)
+- [x] API routes: /api/pdf/report-card/[id], /api/pdf/transcript/[studentId]
+- [x] Graceful fallback when @react-pdf/renderer not installed (install to activate)
+
+### Step 4.5 — Advanced Analytics & Reporting ✅ COMPLETE
+- [x] Router: `packages/api/src/routers/analytics.ts` — enrollment trends, attendance trends, grade distribution, fee aging, teacher workload, CSV export
+- [x] Frontend: `apps/web/src/app/(dashboard)/analytics/page.tsx` — tabbed analytics dashboard with recharts
+- [x] Export: CSV download on each analytics tab
+
+### Step 4.6 — Multi-Language (i18n) ✅ COMPLETE
+- [x] Translation files: `apps/web/messages/en.json` (expanded), `apps/web/messages/km.json` (full Khmer)
+- [x] next-intl config: `apps/web/src/i18n/request.ts` — cookie-based locale detection
+- [x] Locale API: `/api/i18n/set-locale` — sets locale cookie
+- [x] Middleware updated to allow /apply/(.*) and /api/i18n/(.*) as public routes
 
 ---
 

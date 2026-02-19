@@ -7,3 +7,4 @@ export * from "./common";
 export * from "./communication";
 export * from "./onboarding";
 export * from "./timetable";
+export * from "./admissions";

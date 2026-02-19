@@ -7,6 +7,7 @@ import {
   feeStructures, invoices, payments, reportCards, announcements,
   messageThreads, messages, threadParticipants,
   periods, timetableEntries, substitutions,
+  applications, applicationInterviews, waitlistEntries,
 } from "./schema";
 import {
   FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, LAST_NAMES, NATIONALITIES, LANGUAGES,
@@ -604,6 +605,121 @@ async function seed() {
       await db.insert(substitutions).values(subVals);
       console.log("Created 3 sample substitutions");
     }
+  }
+
+  // --- Admissions (18 applications across all 7 statuses) ---
+  const existingApps = await db.select({ id: applications.id }).from(applications).limit(1);
+  if (existingApps.length > 0) {
+    console.log("Using existing admissions applications");
+  } else {
+    type AppStatus = "inquiry" | "applied" | "interviewed" | "accepted" | "enrolled" | "rejected" | "waitlisted";
+    const appData: {
+      status: AppStatus;
+      studentFirstName: string;
+      studentLastName: string;
+      dateOfBirth: Date;
+      gradeLevelIdx: number;
+      guardianName: string;
+      guardianEmail: string;
+      guardianPhone: string;
+      notes?: string;
+      appliedAt: Date;
+    }[] = [
+      // inquiry (3) — July 2025
+      { status: "inquiry", studentFirstName: "Liam", studentLastName: "Chen", dateOfBirth: new Date("2013-03-12"), gradeLevelIdx: 0, guardianName: "James Chen", guardianEmail: "james.chen@email.com", guardianPhone: "+66-81-234-5670", appliedAt: new Date("2025-07-01T09:00:00Z") },
+      { status: "inquiry", studentFirstName: "Sofia", studentLastName: "Martinez", dateOfBirth: new Date("2012-08-22"), gradeLevelIdx: 1, guardianName: "Carlos Martinez", guardianEmail: "carlos.martinez@email.com", guardianPhone: "+66-82-345-6781", appliedAt: new Date("2025-07-03T10:30:00Z") },
+      { status: "inquiry", studentFirstName: "Arjun", studentLastName: "Patel", dateOfBirth: new Date("2011-11-05"), gradeLevelIdx: 2, guardianName: "Ravi Patel", guardianEmail: "ravi.patel@email.com", guardianPhone: "+66-83-456-7892", appliedAt: new Date("2025-07-05T14:00:00Z") },
+      // applied (4) — mid-July 2025
+      { status: "applied", studentFirstName: "Emma", studentLastName: "Williams", dateOfBirth: new Date("2013-01-18"), gradeLevelIdx: 0, guardianName: "Sarah Williams", guardianEmail: "sarah.williams@email.com", guardianPhone: "+66-84-567-8903", appliedAt: new Date("2025-07-10T08:00:00Z") },
+      { status: "applied", studentFirstName: "Kai", studentLastName: "Tanaka", dateOfBirth: new Date("2012-05-30"), gradeLevelIdx: 1, guardianName: "Hiroshi Tanaka", guardianEmail: "hiroshi.tanaka@email.com", guardianPhone: "+66-85-678-9014", appliedAt: new Date("2025-07-12T11:00:00Z") },
+      { status: "applied", studentFirstName: "Mia", studentLastName: "Kim", dateOfBirth: new Date("2011-09-14"), gradeLevelIdx: 2, guardianName: "Ji-Yeon Kim", guardianEmail: "jiyeon.kim@email.com", guardianPhone: "+66-86-789-0125", appliedAt: new Date("2025-07-15T09:30:00Z") },
+      { status: "applied", studentFirstName: "Lucas", studentLastName: "Garcia", dateOfBirth: new Date("2010-12-07"), gradeLevelIdx: 3, guardianName: "Miguel Garcia", guardianEmail: "miguel.garcia@email.com", guardianPhone: "+66-87-890-1236", appliedAt: new Date("2025-07-20T15:00:00Z") },
+      // interviewed (3) — Aug 2025
+      { status: "interviewed", studentFirstName: "Priya", studentLastName: "Singh", dateOfBirth: new Date("2013-04-25"), gradeLevelIdx: 0, guardianName: "Deepak Singh", guardianEmail: "deepak.singh@email.com", guardianPhone: "+66-88-901-2347", appliedAt: new Date("2025-08-01T10:00:00Z") },
+      { status: "interviewed", studentFirstName: "Felix", studentLastName: "Muller", dateOfBirth: new Date("2012-07-19"), gradeLevelIdx: 1, guardianName: "Hans Muller", guardianEmail: "hans.muller@email.com", guardianPhone: "+66-89-012-3458", appliedAt: new Date("2025-08-05T09:00:00Z") },
+      { status: "interviewed", studentFirstName: "Aisha", studentLastName: "Hassan", dateOfBirth: new Date("2011-02-28"), gradeLevelIdx: 2, guardianName: "Omar Hassan", guardianEmail: "omar.hassan@email.com", guardianPhone: "+66-80-123-4569", appliedAt: new Date("2025-08-10T13:00:00Z") },
+      // accepted (3) — Sep 2025
+      { status: "accepted", studentFirstName: "Noah", studentLastName: "Johnson", dateOfBirth: new Date("2013-06-11"), gradeLevelIdx: 0, guardianName: "Mark Johnson", guardianEmail: "mark.johnson@email.com", guardianPhone: "+66-81-234-5680", appliedAt: new Date("2025-09-01T08:00:00Z") },
+      { status: "accepted", studentFirstName: "Yuki", studentLastName: "Sato", dateOfBirth: new Date("2012-03-03"), gradeLevelIdx: 1, guardianName: "Kenji Sato", guardianEmail: "kenji.sato@email.com", guardianPhone: "+66-82-345-6791", appliedAt: new Date("2025-09-03T10:00:00Z") },
+      { status: "accepted", studentFirstName: "Isabella", studentLastName: "Costa", dateOfBirth: new Date("2011-10-20"), gradeLevelIdx: 2, guardianName: "Paulo Costa", guardianEmail: "paulo.costa@email.com", guardianPhone: "+66-83-456-7802", appliedAt: new Date("2025-09-07T14:00:00Z") },
+      // enrolled (2) — Sep 2025
+      { status: "enrolled", studentFirstName: "Oliver", studentLastName: "Anderson", dateOfBirth: new Date("2013-02-14"), gradeLevelIdx: 0, guardianName: "Robert Anderson", guardianEmail: "robert.anderson@email.com", guardianPhone: "+66-84-567-8913", appliedAt: new Date("2025-09-10T09:00:00Z") },
+      { status: "enrolled", studentFirstName: "Zara", studentLastName: "Ali", dateOfBirth: new Date("2012-11-08"), gradeLevelIdx: 1, guardianName: "Fatima Ali", guardianEmail: "fatima.ali@email.com", guardianPhone: "+66-85-678-9024", appliedAt: new Date("2025-09-12T11:00:00Z") },
+      // rejected (1) — Sep 2025
+      { status: "rejected", studentFirstName: "Ethan", studentLastName: "Brown", dateOfBirth: new Date("2011-07-16"), gradeLevelIdx: 3, guardianName: "David Brown", guardianEmail: "david.brown@email.com", guardianPhone: "+66-86-789-0135", notes: "Application did not meet entry requirements for Grade 10. Recommended to reapply for the following academic year.", appliedAt: new Date("2025-09-15T08:00:00Z") },
+      // waitlisted (2) — Oct 2025
+      { status: "waitlisted", studentFirstName: "Hana", studentLastName: "Nakamura", dateOfBirth: new Date("2013-05-09"), gradeLevelIdx: 0, guardianName: "Takeshi Nakamura", guardianEmail: "takeshi.nakamura@email.com", guardianPhone: "+66-87-890-1246", appliedAt: new Date("2025-10-01T10:00:00Z") },
+      { status: "waitlisted", studentFirstName: "Marco", studentLastName: "Rossi", dateOfBirth: new Date("2013-08-27"), gradeLevelIdx: 0, guardianName: "Giulia Rossi", guardianEmail: "giulia.rossi@email.com", guardianPhone: "+66-88-901-2357", appliedAt: new Date("2025-10-05T09:00:00Z") },
+    ];
+
+    const insertedApps = [];
+    for (const app of appData) {
+      const [inserted] = await db.insert(applications).values({
+        tenantId,
+        status: app.status,
+        studentFirstName: app.studentFirstName,
+        studentLastName: app.studentLastName,
+        dateOfBirth: app.dateOfBirth,
+        gradeLevelId: gradeLevelIds[app.gradeLevelIdx],
+        academicYearId: yearId,
+        guardianName: app.guardianName,
+        guardianEmail: app.guardianEmail,
+        guardianPhone: app.guardianPhone,
+        notes: app.notes ?? null,
+        appliedAt: app.appliedAt,
+      }).returning();
+      insertedApps.push({ ...inserted, gradeLevelIdx: app.gradeLevelIdx });
+    }
+    console.log(`Created ${insertedApps.length} applications`);
+
+    // Interviews for "interviewed" status (indices 7-9)
+    const interviewedApps = insertedApps.filter(a => a.status === "interviewed");
+    let interviewCount = 0;
+    for (const app of interviewedApps) {
+      const interviewDate = new Date(app.appliedAt);
+      interviewDate.setDate(interviewDate.getDate() + 10);
+      await db.insert(applicationInterviews).values({
+        applicationId: app.id,
+        tenantId,
+        scheduledAt: interviewDate,
+        interviewedBy: adminId,
+        notes: "Interview conducted. Candidate demonstrated solid academic foundation.",
+        outcome: "pending",
+      });
+      interviewCount++;
+    }
+
+    // Interviews for "accepted" status with outcome: "accepted" (indices 10-12)
+    const acceptedApps = insertedApps.filter(a => a.status === "accepted");
+    for (const app of acceptedApps) {
+      const interviewDate = new Date(app.appliedAt);
+      interviewDate.setDate(interviewDate.getDate() + 7);
+      await db.insert(applicationInterviews).values({
+        applicationId: app.id,
+        tenantId,
+        scheduledAt: interviewDate,
+        interviewedBy: adminId,
+        notes: "Excellent interview. Strong academic record and extracurricular involvement.",
+        outcome: "accepted",
+      });
+      interviewCount++;
+    }
+    console.log(`Created ${interviewCount} application interviews`);
+
+    // Waitlist entries for "waitlisted" status (rank 1 and 2)
+    const waitlistedApps = insertedApps.filter(a => a.status === "waitlisted");
+    let waitlistCount = 0;
+    for (let i = 0; i < waitlistedApps.length; i++) {
+      const app = waitlistedApps[i];
+      await db.insert(waitlistEntries).values({
+        tenantId,
+        applicationId: app.id,
+        gradeLevelId: gradeLevelIds[app.gradeLevelIdx],
+        rank: i + 1,
+      });
+      waitlistCount++;
+    }
+    console.log(`Created ${waitlistCount} waitlist entries`);
   }
 
   console.log("\n--- Enhanced seed complete! ---");
