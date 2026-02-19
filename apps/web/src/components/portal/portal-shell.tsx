@@ -1,8 +1,24 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
 import { PortalNav } from "./portal-nav";
 import { ChildSelector } from "./child-selector";
+import { DemoUserButton } from "@/components/demo/demo-user-button";
+import { useEffect, useState } from "react";
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
+function PortalUserButton() {
+  const [UserButton, setUserButton] = useState<React.ComponentType | null>(null);
+  useEffect(() => {
+    if (!IS_DEMO) {
+      import("@clerk/nextjs").then((m) => setUserButton(() => m.UserButton));
+    }
+  }, []);
+
+  if (IS_DEMO) return <DemoUserButton />;
+  if (!UserButton) return null;
+  return <UserButton />;
+}
 
 export function PortalShell({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +28,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
           <span className="text-lg font-semibold">Parent Portal</span>
           <div className="flex items-center gap-4">
             <ChildSelector />
-            <UserButton />
+            <PortalUserButton />
           </div>
         </div>
         <div className="mx-auto max-w-5xl px-6 pb-3">

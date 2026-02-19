@@ -5,6 +5,10 @@ import { sql } from "drizzle-orm";
 import { db } from "@school-saas/db";
 import type { UserRole } from "@school-saas/db/schema";
 
+const IS_DEMO = process.env.DEMO_MODE === "true";
+const DEMO_TENANT_ID = process.env.DEMO_TENANT_ID ?? "org_39n7rluabtOAtn1Hvu8d3HM0ThY";
+const DEMO_USER_ID = process.env.DEMO_USER_ID ?? "demo_user_admin_001";
+
 export interface TRPCContext {
   db: typeof db;
   auth: {
@@ -22,6 +26,18 @@ const CLERK_ROLE_MAP: Record<string, string> = {
 };
 
 export async function createTRPCContext(opts: { req: Request }): Promise<TRPCContext> {
+  // Demo mode: inject a hardcoded admin context so no Clerk token is required
+  if (IS_DEMO) {
+    return {
+      db,
+      auth: {
+        userId: DEMO_USER_ID,
+        orgId: DEMO_TENANT_ID,
+        orgRole: "school_admin",
+      },
+    };
+  }
+
   const session = await auth();
   const rawRole = session.orgRole ?? null;
 
@@ -65,7 +81,6 @@ const enforceTenant = t.middleware(async ({ ctx, next }) => {
   }
 
   // Set the tenant ID in the PostgreSQL session for RLS
-  // This will be used by RLS policies to filter data
   await ctx.db.execute(
     sql`SELECT set_config('app.current_tenant_id', ${ctx.auth.orgId}, false)`
   );

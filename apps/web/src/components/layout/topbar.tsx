@@ -1,11 +1,13 @@
 "use client";
 
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "./breadcrumbs";
 import { useEffect, useState } from "react";
+import { DemoUserButton, DemoOrgBadge } from "@/components/demo/demo-user-button";
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -51,6 +53,28 @@ function LocaleSwitcher() {
   );
 }
 
+function ClerkControls() {
+  // Dynamically rendered only in non-demo builds
+  const [Comps, setComps] = useState<{
+    OrganizationSwitcher: React.ComponentType<{ appearance?: object }>;
+    UserButton: React.ComponentType;
+  } | null>(null);
+
+  useEffect(() => {
+    import("@clerk/nextjs").then((m) => {
+      setComps({ OrganizationSwitcher: m.OrganizationSwitcher, UserButton: m.UserButton });
+    });
+  }, []);
+
+  if (!Comps) return null;
+  return (
+    <>
+      <Comps.OrganizationSwitcher appearance={{ elements: { rootBox: "flex items-center" } }} />
+      <Comps.UserButton />
+    </>
+  );
+}
+
 export function Topbar({ onMenuClick }: TopbarProps) {
   return (
     <header className="flex h-16 items-center gap-4 border-b px-6">
@@ -68,12 +92,14 @@ export function Topbar({ onMenuClick }: TopbarProps) {
       </div>
       <div className="ml-auto flex items-center gap-4">
         <LocaleSwitcher />
-        <OrganizationSwitcher
-          appearance={{
-            elements: { rootBox: "flex items-center" },
-          }}
-        />
-        <UserButton />
+        {IS_DEMO ? (
+          <>
+            <DemoOrgBadge />
+            <DemoUserButton />
+          </>
+        ) : (
+          <ClerkControls />
+        )}
       </div>
     </header>
   );

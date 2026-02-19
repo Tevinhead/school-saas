@@ -1,8 +1,15 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+const IS_DEMO = process.env.DEMO_MODE === "true";
+
 export default async function HomePage() {
+  // In demo mode: skip auth check and land straight in the dashboard
+  if (IS_DEMO) {
+    redirect("/dashboard");
+  }
+
+  const { auth } = await import("@clerk/nextjs/server");
   const session = await auth();
 
   if (session.userId) {

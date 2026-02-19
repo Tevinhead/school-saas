@@ -1,23 +1,29 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
 import { TeacherDashboard } from "@/components/dashboard/teacher-dashboard";
 
+const IS_DEMO = process.env.DEMO_MODE === "true";
+
 export default async function DashboardHomePage() {
-  const session = await auth();
+  let userRole: string | null = null;
 
-  const userRole = session.orgRole
-    ? ({
-        "org:admin": "school_admin",
-        "org:teacher": "teacher",
-        "org:student": "student",
-        "org:parent": "parent",
-      }[session.orgRole] ?? null)
-    : null;
+  if (IS_DEMO) {
+    userRole = "school_admin";
+  } else {
+    const { auth } = await import("@clerk/nextjs/server");
+    const session = await auth();
+    userRole = session.orgRole
+      ? ({
+          "org:admin": "school_admin",
+          "org:teacher": "teacher",
+          "org:student": "student",
+          "org:parent": "parent",
+        }[session.orgRole] ?? null)
+      : null;
 
-  // Student/parent users should use the portal
-  if (userRole === "student" || userRole === "parent") {
-    redirect("/portal");
+    if (userRole === "student" || userRole === "parent") {
+      redirect("/portal");
+    }
   }
 
   return (
